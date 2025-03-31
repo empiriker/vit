@@ -390,6 +390,13 @@ class TaskParser:
                 # Allows quoted strings.
                 # Adjust for missing spaces around parentheses.
                 filters = shlex.split(re.sub(FILTER_PARENS_REGEX, r' \1 ', attrs['filter']))
+                def split_preserving_quotes(s):
+                    pattern = r'"[^"]*"|[^\s]+'
+                    return re.findall(pattern, s)
+
+                filters = split_preserving_quotes(attrs["filter"])
+
+
                 reports[report]['filter'] = [f for f in filters if not FILTER_EXCLUSION_REGEX.match(f)]
             if 'labels' in attrs:
                 reports[report]['labels'] = attrs['labels'].split(',')
